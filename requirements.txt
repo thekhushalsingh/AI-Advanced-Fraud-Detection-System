@@ -7,3 +7,4 @@ pandas==2.1.4
 numpy==1.26.3
 joblib==1.3.2
 gunicorn==21.2.0
+sreamlit==1.0.0
