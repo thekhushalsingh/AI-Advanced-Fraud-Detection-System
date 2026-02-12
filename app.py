@@ -55,7 +55,7 @@ def load_model():
     if os.path.exists(info_path):
         with open(info_path) as f:
             model_info = json.load(f)
-
+#----------------------------
 def store_transaction(txn):
     if db is not None:
         db.transactions.insert_one(txn)
