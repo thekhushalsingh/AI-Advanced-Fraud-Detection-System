@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AFDS - AI Fraud Detection System</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">&#x1F6E1;</div>
+            <span>AFDS</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" class="nav-link active" data-section="dashboard">Dashboard</a></li>
+            <li><a href="#" class="nav-link" data-section="transactions">Transactions</a></li>
+            <li><a href="#" class="nav-link" data-section="alerts">Alerts</a></li>
+            <li><a href="#" class="nav-link" data-section="predict">Predict</a></li>
+            <li><a href="#" class="nav-link" data-section="model">Model Info</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <div class="status-dot" id="statusDot"></div>
+            <span id="statusText">Checking...</span>
+        </div>
+    </nav>
+
+    <main class="content">
+        <!-- Dashboard -->
+        <section id="dashboard" class="section active">
+            <div class="section-header">
+                <h1>Dashboard</h1>
+                <button class="btn btn-primary" onclick="simulateTransactions()">Simulate Transactions</button>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Transactions</div>
+                    <div class="stat-value" id="totalTxns">0</div>
+                </div>
+                <div class="stat-card stat-danger">
+                    <div class="stat-label">Fraud Detected</div>
+                    <div class="stat-value" id="fraudTxns">0</div>
+                </div>
+                <div class="stat-card stat-success">
+                    <div class="stat-label">Legitimate</div>
+                    <div class="stat-value" id="legitTxns">0</div>
+                </div>
+                <div class="stat-card stat-warning">
+                    <div class="stat-label">Fraud Rate</div>
+                    <div class="stat-value" id="fraudRate">0%</div>
+                </div>
+                <div class="stat-card stat-danger">
+                    <div class="stat-label">Open Alerts</div>
+                    <div class="stat-value" id="openAlerts">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg Fraud Amount</div>
+                    <div class="stat-value" id="avgFraudAmt">$0</div>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Recent Transactions</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Amount</th>
+                                <th>Category</th>
+                                <th>Risk</th>
+                                <th>Fraud Prob</th>
+                                <th>Result</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentTxnBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Transactions -->
+        <section id="transactions" class="section">
+            <div class="section-header">
+                <h1>All Transactions</h1>
+                <button class="btn btn-secondary" onclick="loadTransactions()">Refresh</button>
+            </div>
+            <div class="card">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Amount</th>
+                                <th>Category</th>
+                                <th>Type</th>
+                                <th>Distance</th>
+                                <th>Risk</th>
+                                <th>Fraud Prob</th>
+                                <th>Result</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allTxnBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Alerts -->
+        <section id="alerts" class="section">
+            <div class="section-header">
+                <h1>Fraud Alerts</h1>
+                <button class="btn btn-secondary" onclick="loadAlerts()">Refresh</button>
+            </div>
+            <div class="card">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>Amount</th>
+                                <th>Fraud Probability</th>
+                                <th>Risk Level</th>
+                                <th>Status</th>
+                                <th>Time</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alertsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Predict -->
+        <section id="predict" class="section">
+            <div class="section-header">
+                <h1>Predict Transaction</h1>
+            </div>
+            <div class="card predict-card">
+                <form id="predictForm" onsubmit="predictTransaction(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Amount ($)</label>
+                            <input type="number" name="amount" step="0.01" value="150.00" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Hour of Day (0-23)</label>
+                            <input type="number" name="hour_of_day" min="0" max="23" value="14" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Day of Week (0-6)</label>
+                            <input type="number" name="day_of_week" min="0" max="6" value="3" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Merchant Category</label>
+                            <select name="merchant_category">
+                                <option value="grocery">Grocery</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="clothing">Clothing</option>
+                                <option value="restaurant">Restaurant</option>
+                                <option value="gas">Gas</option>
+                                <option value="travel">Travel</option>
+                                <option value="online">Online</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Transaction Type</label>
+                            <select name="transaction_type">
+                                <option value="card_present">Card Present</option>
+                                <option value="online">Online</option>
+                                <option value="contactless">Contactless</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Distance from Home (km)</label>
+                            <input type="number" name="distance_from_home" step="0.1" value="10" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Distance from Last Txn (km)</label>
+                            <input type="number" name="distance_from_last_txn" step="0.1" value="5" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Avg Daily Transactions</label>
+                            <input type="number" name="avg_daily_transactions" value="3" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Velocity Last Hour</label>
+                            <input type="number" name="velocity_last_hour" value="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Failed Attempts (24h)</label>
+                            <input type="number" name="failed_attempts_24h" value="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Account Age (days)</label>
+                            <input type="number" name="account_age_days" value="365" required>
+                        </div>
+                        <div class="form-group">
+                            <label>International</label>
+                            <select name="is_international">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="margin-top:1rem;">Analyze Transaction</button>
+                </form>
+                <div id="predictionResult" class="prediction-result" style="display:none;"></div>
+            </div>
+        </section>
+
+        <!-- Model Info -->
+        <section id="model" class="section">
+            <div class="section-header">
+                <h1>Model Performance</h1>
+                <button class="btn btn-warning" onclick="retrainModel()">Retrain Model</button>
+            </div>
+            <div id="modelInfoContent" class="model-grid"></div>
+        </section>
+    </main>
+
+    <script src="/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "best_model": "logistic_regression",
+  "results": {
+    "logistic_regression": {
+      "accuracy": 1.0,
+      "f1": 1.0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "random_forest": {
+      "accuracy": 1.0,
+      "f1": 1.0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "xgboost": {
+      "accuracy": 0.9995,
+      "f1": 0.995,
+      "precision": 0.9901,
+      "recall": 1.0
+    }
+  }
+}
