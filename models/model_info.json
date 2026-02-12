@@ -16,7 +16,7 @@
     "xgboost": {
       "accuracy": 0.9995,
       "f1": 0.995,
-      "precision": 0.9901,
+      "precision": 0.9900,
       "recall": 1.0
     }
   }
