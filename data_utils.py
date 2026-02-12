@@ -50,7 +50,7 @@ def generate_dataset(n_samples=10000, fraud_ratio=0.05, output_path="data/transa
     print(f"Generated {len(df)} transactions ({n_fraud} fraud, {n_legit} legit) -> {output_path}")
     return df
 
-
+#------------------------------------------------
 def preprocess(df):
     """Clean and encode the dataframe for model training."""
     df = df.copy()
